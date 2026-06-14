@@ -6,16 +6,17 @@
                     <p class="text-sm font-semibold uppercase tracking-wide text-emerald-700">Katalog</p>
                     <h2 class="mt-1 text-2xl font-semibold text-slate-950">Data Buku</h2>
                 </div>
-                <form method="GET" action="{{ route('buku.index') }}" class="flex w-full gap-2 md:max-w-md">
-                    <input
-                        type="search"
-                        name="search"
-                        value="{{ $search }}"
-                        placeholder="Cari judul, pengarang, atau kode"
-                        class="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
-                    >
-                    <button type="submit" class="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Cari</button>
-                </form>
+               <form method="GET" action="{{ route('buku.index') }}" class="flex w-full gap-2 md:max-w-md">
+    <input
+        type="search"
+        name="search"
+        value="{{ $search ?? '' }}"
+        placeholder="Cari judul, pengarang, atau kode"
+        class="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+    >
+    
+    <button type="submit" class="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Cari</button>
+</form>
             </div>
         </section>
 

@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 
 class BukuController extends Controller
 {
+    /**
+     * Halaman daftar buku (katalog)
+     */
     public function index(Request $request): View
     {
         $search = $request->string('search')->trim()->toString();
@@ -27,5 +30,13 @@ class BukuController extends Controller
                 ->paginate(10)
                 ->withQueryString(),
         ]);
+    }
+
+    /**
+     * Halaman rak buku (tampilan visual)
+     */
+    public function rakBuku(): View
+    {
+        return view('rak.index');
     }
 }
