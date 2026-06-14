@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('no_telp1', 20);
             $table->string('no_telp2', 20)->nullable();
             $table->date('tgl_daftar');
-            $table->string('qr_anggota', 255)->nullable();
             $table->timestamps();
 
             $table->index('no_anggota');

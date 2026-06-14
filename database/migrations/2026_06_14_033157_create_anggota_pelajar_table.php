@@ -24,7 +24,6 @@ return new class extends Migration
             $table->string('nama_ortu', 100);
             $table->text('alamat_ortu');
             $table->string('no_telp_ortu', 20);
-            $table->string('qr_anggota', 255)->nullable();
             $table->timestamps();
 
             $table->index('no_anggota');

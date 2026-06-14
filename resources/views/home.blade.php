@@ -18,7 +18,7 @@
             <div class="grid grid-cols-2 gap-3 rounded-md border border-slate-200 bg-slate-50 p-4">
                 <x-cards.stat-card label="Total Buku" :value="number_format($stats['buku'])" tone="emerald" />
                 <x-cards.stat-card label="Total Anggota" :value="number_format($stats['anggota'])" tone="sky" />
-                <x-cards.stat-card label="Kunjungan Hari Ini" :value="number_format($stats['kunjunganHariIni'])" tone="amber" />
+                <x-cards.stat-card label="Kunjungan Hari Ini" :value="number_format($stats['kunjungan'])" tone="amber" />
                 <x-cards.stat-card label="Stok Tersedia" :value="number_format($stats['tersedia'])" tone="slate" />
             </div>
         </div>

@@ -4,38 +4,106 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Models\AnggotaPelajar;
+use App\Models\AnggotaNonPelajar;
+use App\Models\Notification;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
-    public function create(): View
+    public function showRegistrationForm()
     {
         return view('auth.register');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function register(Request $request)
     {
-        $validated = $request->validate([
+        // 1. Validasi Dasar User & Pilihan Role
+        $request->validate([
             'name' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'email', 'max:100', Rule::unique('users', 'email')],
-            'password' => ['required', 'confirmed', 'min:8'],
-            'role' => ['required', Rule::in(['pelajar', 'non_pelajar'])],
+            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'in:pelajar,non_pelajar'],
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => $validated['role'],
-        ]);
+        // 2. Validasi Tambahan Berdasarkan Tipe Anggota
+        if ($request->role === 'pelajar') {
+            $request->validate([
+                'nim_nis' => ['required', 'string', 'max:30'],
+                'asal_sekolah' => ['required', 'string', 'max:100'],
+            ]);
+        } else {
+            $request->validate([
+                'nik' => ['required', 'string', 'max:30'],
+                'pekerjaan' => ['required', 'string', 'max:100'],
+            ]);
+        }
 
-        Auth::login($user);
+        // 3. Eksekusi Database Transaction
+        DB::transaction(function () use ($request) {
+            // Pembuatan User Akun
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $request->role,
+            ]);
 
-        return redirect()->route('dashboard');
+            $no_anggota = 'AGT-' . strtoupper($request->role[0]) . '-' . time();
+
+            // Pengisian data ke tabel spesifik sesuai role pilihan
+            if ($request->role === 'pelajar') {
+                AnggotaPelajar::create([
+                    'user_id' => $user->id,
+                    'no_anggota' => $no_anggota,
+                    'nim_nis' => $request->nim_nis,
+                    'nama_anggota' => $request->name,
+                    'asal_sekolah' => $request->asal_sekolah,
+                    'tgl_daftar' => now(),
+                    'ttl' => '-',
+                    'alamat' => '-',
+                    'kode_pos' => '-',
+                    'no_telp1' => '-',
+                    'no_telp2' => '-',
+                    'nama_ortu' => '-',
+                    'alamat_ortu' => '-',
+                    'no_telp_ortu' => '-',
+
+                
+                ]);
+            } else {
+                AnggotaNonPelajar::create([
+                    'user_id' => $user->id,
+                    'no_anggota' => $no_anggota,
+                    'nik' => $request->nik,
+                    'nama_anggota' => $request->name,
+                    'pekerjaan' => $request->pekerjaan,
+                    'tgl_daftar' => now(),
+                    'ttl' => '-',
+                    'alamat' => '-',
+                    'kode_pos' => '-',
+                    'no_telp1' => '-',
+                    'no_telp2' => '-',
+                    
+                ]);
+            }
+
+            // Pembuatan Notifikasi Sesuai Kebutuhan Bisnis
+            Notification::create([
+                'user_id' => $user->id,
+                'title' => 'Akun Berhasil Dibuat!',
+                'message' => 'Selamat datang di Perpustakaan Kota Sumbawa. Yuk, lihat koleksi buku terbaru kami di menu Rak Buku dan nikmati kemudahan membaca!',
+                'is_read' => false,
+            ]);
+
+            // Login otomatis setelah sukses mendaftar
+            Auth::login($user);
+        });
+
+        // Redirect langsung ke halaman utama/home dengan pesan sukses
+        return redirect()->route('home')->with('success', 'Registrasi sukses! Silakan cek notifikasi akun baru Anda.');
     }
 }
