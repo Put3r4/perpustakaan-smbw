@@ -13,10 +13,23 @@
                     </h2>
                 </div>
 
+
                 <a href="{{ route('buku.create') }}"
                     class="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700">
                     + Tambah Buku
                 </a>
+
+               <form method="GET" action="{{ route('buku.index') }}" class="flex w-full gap-2 md:max-w-md">
+    <input
+        type="search"
+        name="search"
+        value="{{ $search ?? '' }}"
+        placeholder="Cari judul, pengarang, atau kode"
+        class="min-w-0 flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+    >
+
+    <button type="submit" class="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Cari</button>
+</form>
 
             </div>
         </section>

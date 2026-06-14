@@ -12,10 +12,14 @@ use App\Models\TransaksiPelajar;
 use App\Models\VisitorLog;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function __invoke(): View
+    /**
+     * Dashboard utama untuk Petugas/Superadmin
+     */
+    public function index(): View
     {
         $latestStudentLoans = TransaksiPelajar::with(['anggota:id,nama_anggota', 'buku:id,judul'])
             ->select('id', 'kode_transaksi', 'no_anggota_p', 'buku_id', 'status', 'tgl_pinjam', 'created_at')
@@ -74,5 +78,53 @@ class DashboardController extends Controller
                 ->orderBy('jam_mulai')
                 ->get(),
         ]);
+    }
+
+    /**
+     * Halaman profil untuk anggota (pelajar & non-pelajar)
+     */
+    public function profilAnggota(): View
+    {
+        $user = Auth::user();
+        
+        // Ambil data anggota berdasarkan role
+        $anggota = null;
+        if ($user->role === 'pelajar') {
+            $anggota = AnggotaPelajar::where('user_id', $user->id)->first();
+        } elseif ($user->role === 'non_pelajar') {
+            $anggota = AnggotaNonPelajar::where('user_id', $user->id)->first();
+        }
+
+        return view('anggota.profile', compact('user', 'anggota'));
+    }
+
+    /**
+     * Halaman riwayat peminjaman untuk anggota (pelajar & non-pelajar)
+     */
+    public function peminjamanSaya(): View
+    {
+        $user = Auth::user();
+        $peminjaman = collect();
+
+        // Ambil data peminjaman berdasarkan role
+        if ($user->role === 'pelajar') {
+            $anggota = AnggotaPelajar::where('user_id', $user->id)->first();
+            if ($anggota) {
+                $peminjaman = TransaksiPelajar::with('buku:id,judul,pengarang')
+                    ->where('no_anggota_p', $anggota->no_anggota)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+        } elseif ($user->role === 'non_pelajar') {
+            $anggota = AnggotaNonPelajar::where('user_id', $user->id)->first();
+            if ($anggota) {
+                $peminjaman = TransaksiNonPelajar::with('buku:id,judul,pengarang')
+                    ->where('no_anggota_np', $anggota->no_anggota)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+        }
+
+        return view('transaksi.history', compact('peminjaman'));
     }
 }
