@@ -9,6 +9,8 @@ use App\Models\Buku;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\VisitorLog;
+use App\Http\Controllers\Anggota\AnggotaPelajarController;
+
 
 // ==========================================
 // HALAMAN UTAMA
@@ -113,6 +115,9 @@ Route::middleware(['auth'])
             ));
 
         })->name('dashboard');
+
+        Route::resource('anggota/pelajar', AnggotaPelajarController::class)
+            ->names('anggota.pelajar');
 
     });
 

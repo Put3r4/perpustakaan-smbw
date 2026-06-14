@@ -15,9 +15,9 @@ return new class extends Migration
             $table->string('nim_nis', 30);
             $table->string('nama_anggota', 100);
             $table->string('asal_sekolah', 100);
-            $table->string('ttl', 100);
+            $table->date('tanggal_lahir')->nullable();
             $table->text('alamat');
-            $table->string('kode_pos', 10);
+            $table->string('kode_pos', 10)->nullable();
             $table->string('no_telp1', 20);
             $table->string('no_telp2', 20)->nullable();
             $table->date('tgl_daftar');
