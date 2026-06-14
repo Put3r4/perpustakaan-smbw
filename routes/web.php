@@ -2,12 +2,14 @@
 
 use App\Http\Controllers\Buku\BukuController;
 use App\Http\Controllers\Buku\KategoriBukuController;
+use App\Http\Controllers\Buku\RakBukuController;
 use App\Models\AnggotaNonPelajar;
 use App\Models\AnggotaPelajar;
 use App\Models\Buku;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\VisitorLog;
+
 // ==========================================
 // HALAMAN UTAMA
 // ==========================================
@@ -69,6 +71,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('buku')->group(function () {
         Route::resource('kategori', KategoriBukuController::class);
+    });
+
+    Route::prefix('buku')->group(function () {
+        Route::resource('rak', RakBukuController::class);
     });
 });
 

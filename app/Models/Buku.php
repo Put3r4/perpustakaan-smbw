@@ -30,4 +30,8 @@ class Buku extends Model
         'cover_buku',
         'status',
     ];
+    public function rak()
+    {
+        return $this->belongsTo(RakBuku::class, 'rak_id');
+    }
 }
