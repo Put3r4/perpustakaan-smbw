@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title }} - {{ config('app.name', 'Perpustakaan Kota Sumbawa') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="bg-slate-100 text-slate-950 antialiased">
@@ -55,6 +56,13 @@
                             <x-dashboard.nav-link :href="route('transaksi.pengembalian.index')"
                                 :active="request()->routeIs('transaksi.pengembalian.*')">Pengembalian</x-dashboard.nav-link>
                             <x-dashboard.nav-link :href="route('transaksi.denda.index')" :active="request()->routeIs('transaksi.denda.*')">Denda</x-dashboard.nav-link>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Operasional</p>
+                        <div class="mt-2 space-y-1">
+                            <x-dashboard.nav-link :href="route('operasional.petugas-shift.index')" :active="request()->routeIs('operasional.petugas-shift.*')">Jadwal Piket</x-dashboard.nav-link>
                         </div>
                     </div>
 

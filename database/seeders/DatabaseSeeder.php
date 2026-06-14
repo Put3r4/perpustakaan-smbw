@@ -2,11 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Buku;
 use App\Models\SystemSetting;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,7 +11,7 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Seed Aturan Konfigurasi Denda Sistem (Menggunakan updateOrCreate)
         SystemSetting::updateOrCreate(
-            ['key_setting' => 'denda_per_hari'], // Kolom acuan pengecekan
+            ['key_setting' => 'denda_per_hari'],
             [
                 'value_setting' => '500',
                 'description' => 'Tarif denda keterlambatan buku per hari (Rupiah)'
@@ -22,28 +19,21 @@ class DatabaseSeeder extends Seeder
         );
 
         SystemSetting::updateOrCreate(
-            ['key_setting' => 'maksimal_pinjam_buku'], // Kolom acuan pengecekan
+            ['key_setting' => 'maksimal_pinjam_buku'],
             [
                 'value_setting' => '2',
                 'description' => 'Batas maksimal buku yang aktif dipinjam'
             ]
         );
 
-        // 2. Seed Default Superadmin (Menggunakan firstOrCreate agar password tidak ter-hash ulang jika dijalankan lagi)
-        User::firstOrCreate(
-            ['email' => 'admin@perpuskota.id'], // Kolom acuan pengecekan
-            [
-                'name' => 'Super Admin Perpus',
-                'password' => Hash::make('adminSumbawa2026'),
-                'role' => 'superadmin',
-                'email_verified_at' => now(),
-            ]
-        );
-
-        // 3. Buat Data Dummy Buku
-        // Tips: Menggunakan count() mencegah penambahan 20 buku baru terus-menerus setiap seeder dijalankan
-        if (Buku::count() === 0) {
-            Buku::factory(20)->create();
-        }
+        // 2. Jalankan Seeder Modul Fitur Secara Berurutan
+        $this->call([
+            CoreSeeder::class,        // 1 User Admin + 7 Petugas
+            AnggotaSeeder::class,     // 100 Pelajar + 100 Non-Pelajar
+            BukuSeeder::class,        // 10 Kategori + 7 Rak + 1000 Buku
+            TransaksiSeeder::class,   // 242 Transaksi Peminjaman & Pengembalian
+            OperasionalSeeder::class, // Jadwal Shift Petugas (Weekly + 2 Shift Aktif Hari Ini)
+            VisitorSeeder::class,     // 43 Visitor Log Polymorphic
+        ]);
     }
 }

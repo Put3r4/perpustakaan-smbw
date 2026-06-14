@@ -81,6 +81,9 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Operasional\PetugasShiftController;
+
 // ==========================================
 // DASHBOARD
 // ==========================================
@@ -88,34 +91,13 @@ Route::middleware(['auth'])
     ->prefix('dashboard')
     ->group(function () {
 
-        Route::get('/', function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-            $stats = [
-                'anggotaPelajar'    => class_exists(AnggotaPelajar::class)  ?AnggotaPelajar::count() : 0,
-                'anggotaNonPelajar' => class_exists(AnggotaNonPelajar::class)  ?AnggotaNonPelajar::count() : 0,
-                'buku'              => Buku::count(),
-                'kunjunganHariIni'  => VisitorLog::whereDate('created_at', now()->toDateString())->count(),
-                'stokTersedia'      => 0,
-                'peminjamanAktif'   => 0,
-                'terlambat'         => 0,
-            ];
+        Route::resource('operasional/petugas-shift', PetugasShiftController::class)
+            ->names('operasional.petugas-shift');
 
-            $latestTransactions = [];
-
-            $popularBooks = Buku::orderByDesc('total_dipinjam')
-                ->take(5)
-                ->get();
-
-            $todayShifts = collect();
-
-            return view('dashboard.index', compact(
-                'stats',
-                'latestTransactions',
-                'popularBooks',
-                'todayShifts'
-            ));
-
-        })->name('dashboard');
+        Route::get('visitor/excel', [DashboardController::class, 'exportExcel'])->name('dashboard.visitor.excel');
+        Route::get('visitor/pdf', [DashboardController::class, 'exportPdf'])->name('dashboard.visitor.pdf');
 
         Route::resource('anggota/pelajar', AnggotaPelajarController::class)
             ->names('anggota.pelajar');
