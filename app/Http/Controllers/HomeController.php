@@ -17,7 +17,7 @@ class HomeController extends Controller
             'stats' => [
                 'buku' => Buku::count(),
                 'anggota' => AnggotaPelajar::count() + AnggotaNonPelajar::count(),
-                'kunjunganHariIni' => VisitorLog::whereDate('checkin_at', today())->count(),
+                'kunjungan' => VisitorLog::whereDate('checkin_at', today())->count(),
                 'tersedia' => Buku::where('status', 'tersedia')->sum('stok_tersedia'),
             ],
             'popularBooks' => Buku::select('id', 'kode_buku', 'judul', 'pengarang', 'stok_tersedia', 'total_dilihat', 'total_dipinjam', 'status')
