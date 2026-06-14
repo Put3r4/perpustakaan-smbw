@@ -13,17 +13,40 @@ class AnggotaNonPelajar extends Model
     use HasFactory;
 
     protected $table = 'anggota_non_pelajar';
-    protected $guarded = ['id'];
 
-    public function user(): BelongsTo {
+    protected $fillable = [
+        'user_id',
+        'no_anggota',
+        'nik',
+        'nama_anggota',
+        'pekerjaan',
+        'ttl',
+        'alamat',
+        'kode_pos',
+        'no_telp1',
+        'no_telp2',
+        'tgl_daftar',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'tgl_daftar' => 'date',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function transaksi(): HasMany {
+    public function transaksi(): HasMany
+    {
         return $this->hasMany(TransaksiNonPelajar::class, 'no_anggota_np');
     }
 
-    public function visitorLogs(): MorphMany {
+    public function visitorLogs(): MorphMany
+    {
         return $this->morphMany(VisitorLog::class, 'member');
     }
 }

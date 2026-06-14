@@ -9,6 +9,7 @@ use App\Models\Buku;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\VisitorLog;
+use App\Http\Controllers\Anggota\AnggotaNonPelajarController;
 use App\Http\Controllers\Anggota\AnggotaPelajarController;
 
 
@@ -118,6 +119,11 @@ Route::middleware(['auth'])
 
         Route::resource('anggota/pelajar', AnggotaPelajarController::class)
             ->names('anggota.pelajar');
+
+        Route::resource('anggota/non-pelajar', AnggotaNonPelajarController::class)
+            ->names('anggota.non-pelajar')
+            ->parameters(['non-pelajar' => 'nonPelajar'])
+            ->except(['show']);
 
     });
 

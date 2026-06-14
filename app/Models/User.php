@@ -14,6 +14,11 @@ class User extends Authenticatable
     protected $fillable = ['name', 'email', 'password', 'role', 'email_verified_at'];
     protected $hidden = ['password', 'remember_token'];
 
+    public function rememberToken()
+    {
+        return $this->rememberToken();
+    }
+
     public function anggotaPelajar(): HasOne {
         return $this->hasOne(AnggotaPelajar::class);
     }

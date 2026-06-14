@@ -58,13 +58,6 @@
                 {{-- DUST DYNAMIC INPUT: Group Fields Non-Pelajar --}}
                 <div id="group-non_pelajar" class="{{ old('role') === 'non_pelajar' ? '' : 'hidden' }} space-y-4">
                     <div>
-                        <label for="nik" class="text-sm font-medium text-slate-700">NIK (No. KTP)</label>
-                        <input id="nik" name="nik" value="{{ old('nik') }}" class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100">
-                        @error('nik')
-                            <p class="mt-1 text-sm text-rose-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div>
                         <label for="pekerjaan" class="text-sm font-medium text-slate-700">Pekerjaan</label>
                         <input id="pekerjaan" name="pekerjaan" value="{{ old('pekerjaan') }}" class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100">
                         @error('pekerjaan')

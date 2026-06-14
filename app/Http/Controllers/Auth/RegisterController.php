@@ -37,7 +37,6 @@ class RegisterController extends Controller
             ]);
         } else {
             $request->validate([
-                'nik' => ['required', 'string', 'max:30'],
                 'pekerjaan' => ['required', 'string', 'max:100'],
             ]);
         }
@@ -76,18 +75,17 @@ class RegisterController extends Controller
                 ]);
             } else {
                 AnggotaNonPelajar::create([
-                    'user_id' => $user->id,
-                    'no_anggota' => $no_anggota,
-                    'nik' => $request->nik,
-                    'nama_anggota' => $request->name,
-                    'pekerjaan' => $request->pekerjaan,
-                    'tgl_daftar' => now(),
-                    'tanggal_lahir' => null,
-                    'alamat' => '-',
-                    'kode_pos' => null,
-                    'no_telp1' => '-',
-                    'no_telp2' => null,
-                    
+                    'user_id'       => $user->id,
+                    'no_anggota'    => $no_anggota,
+                    'nik'           => '-',
+                    'nama_anggota'  => $request->name,
+                    'pekerjaan'     => $request->pekerjaan ?? '-',
+                    'ttl'           => '-',
+                    'alamat'        => '-',
+                    'kode_pos'      => '-',
+                    'no_telp1'      => '-',
+                    'no_telp2'      => null,
+                    'tgl_daftar'    => now()->toDateString(),
                 ]);
             }
 
