@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\Buku\BukuController;
+use App\Http\Controllers\Buku\KategoriBukuController;
 use App\Models\AnggotaNonPelajar;
 use App\Models\AnggotaPelajar;
 use App\Models\Buku;
 use App\Models\SystemSetting;
 use App\Models\User;
 use App\Models\VisitorLog;
-
 // ==========================================
 // HALAMAN UTAMA
 // ==========================================
@@ -67,6 +67,9 @@ Route::middleware(['auth'])->group(function () {
         return view('transaksi.history');
     })->name('peminjaman.index');
 
+    Route::prefix('buku')->group(function () {
+        Route::resource('kategori', KategoriBukuController::class);
+    });
 });
 
 // ==========================================
